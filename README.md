@@ -1,6 +1,6 @@
-### MailSender
-
-基于YMP框架实现的邮件发送服务模块，支持多帐号配置；
+### YMP-MailSender:
+    
+> 邮件发送服务模块，支持多帐号配置；
 
 #### Maven包依赖
 
@@ -9,6 +9,24 @@
         <artifactId>ymate-module-mailsender</artifactId>
         <version>1.0-SNAPSHOT</version>
     </dependency>
+
+#### 示例代码：
+
+- 通过默认邮件服务发送：
+
+         MailSender.get().create()
+                 .to("notify@demo.xxx")
+                 .cc("ceshi@demo.xxx")
+                 .bcc("someone@demo.xxx")
+                 .subject("帐户注册成功通知邮件")
+                 .send("恭喜你...");
+
+- 通过指定的邮件服务发送：
+
+         MailSender.get().create("demo")
+                 .to("boss@demo.xxx")
+                 .subject("匿名")
+                 .send("再不开响，服务器格式化啦！");
 
 ### 模块配置参数说明
 
