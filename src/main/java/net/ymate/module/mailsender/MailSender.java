@@ -53,10 +53,12 @@ public class MailSender implements IModule, IMailSender {
         return __instance;
     }
 
+    @Override
     public String getName() {
         return IMailSender.MODULE_NAME;
     }
 
+    @Override
     public void init(YMP owner) throws Exception {
         if (!__inited) {
             //
@@ -71,18 +73,22 @@ public class MailSender implements IModule, IMailSender {
         }
     }
 
+    @Override
     public boolean isInited() {
         return __inited;
     }
 
+    @Override
     public IMailSendBuilder create() {
         return __moduleCfg.getMailSendProvider().create();
     }
 
+    @Override
     public IMailSendBuilder create(String serverName) {
         return __moduleCfg.getMailSendProvider().create(__moduleCfg.getMailSendServerCfg(serverName));
     }
 
+    @Override
     public void destroy() throws Exception {
         if (__inited) {
             __inited = false;
@@ -94,10 +100,12 @@ public class MailSender implements IModule, IMailSender {
         }
     }
 
+    @Override
     public YMP getOwner() {
         return __owner;
     }
 
+    @Override
     public IMailSenderModuleCfg getModuleCfg() {
         return __moduleCfg;
     }

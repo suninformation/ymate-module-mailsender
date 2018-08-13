@@ -70,11 +70,15 @@ public class DefaultModuleCfg implements IMailSenderModuleCfg {
                 String _prefix = "server.".concat(_serverName);
                 boolean _needAuth = BlurObject.bind(_moduleCfgs.get(_prefix.concat(".need_auth"))).toBooleanValue();
                 boolean _tlsEnabled = BlurObject.bind(_moduleCfgs.get(_prefix.concat(".tls_enabled"))).toBooleanValue();
-                MailSendServerCfgMeta _meta = null;
+                MailSendServerCfgMeta _meta;
                 if (_needAuth) {
                     String _smtpPassword = _moduleCfgs.get(_prefix.concat(".smtp_password"));
                     if (BlurObject.bind(_moduleCfgs.get(_prefix.concat(".password_encrypted"))).toBooleanValue()) {
-                        _smtpPassword = ClassUtils.impl(_moduleCfgs.get(_prefix.concat(".password_class")), IPasswordProcessor.class, this.getClass()).decrypt(_smtpPassword);
+                        IPasswordProcessor _processor = ClassUtils.impl(_moduleCfgs.get(_prefix.concat(".password_class")), IPasswordProcessor.class, this.getClass());
+                        if (_processor == null) {
+                            _processor = owner.getConfig().getDefaultPasswordClass().newInstance();
+                        }
+                        _smtpPassword = _processor.decrypt(_smtpPassword);
                     }
                     _meta = new MailSendServerCfgMeta(_serverName, _moduleCfgs.get(_prefix.concat(".smtp_host")), _tlsEnabled, _moduleCfgs.get(_prefix.concat(".smtp_username")), _smtpPassword);
                 } else {
@@ -94,26 +98,32 @@ public class DefaultModuleCfg implements IMailSenderModuleCfg {
         }
     }
 
+    @Override
     public IMailSendProvider getMailSendProvider() {
         return __mailSendProvider;
     }
 
+    @Override
     public int getThreadPoolSize() {
         return __threadPoolSize;
     }
 
+    @Override
     public String getDefaultServerName() {
         return __defaultServerName;
     }
 
+    @Override
     public Map<String, MailSendServerCfgMeta> getMailSendServerCfgs() {
         return Collections.unmodifiableMap(__mailSendServerCfgs);
     }
 
+    @Override
     public MailSendServerCfgMeta getDefaultMailSendServerCfg() {
         return __mailSendServerCfgs.get(__defaultServerName);
     }
 
+    @Override
     public MailSendServerCfgMeta getMailSendServerCfg(String name) {
         return __mailSendServerCfgs.get(name);
     }

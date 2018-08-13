@@ -43,11 +43,13 @@ public class DefaultMailSendProvider implements IMailSendProvider {
 
     private IMailSender __owner;
 
+    @Override
     public void init(IMailSender owner) throws Exception {
         __owner = owner;
         __sendExecPool = Executors.newFixedThreadPool(owner.getModuleCfg().getThreadPoolSize());
     }
 
+    @Override
     public void destroy() throws Exception {
         if (__sendExecPool != null) {
             __sendExecPool.shutdown();
@@ -56,14 +58,18 @@ public class DefaultMailSendProvider implements IMailSendProvider {
         __owner = null;
     }
 
+    @Override
     public IMailSendBuilder create() {
         return create(__owner.getModuleCfg().getDefaultMailSendServerCfg());
     }
 
+    @Override
     public IMailSendBuilder create(final MailSendServerCfgMeta serverCfgMeta) {
         return new AbstractMailSendBuilder() {
+            @Override
             public void send(final String content) throws Exception {
                 __sendExecPool.execute(new Runnable() {
+                    @Override
                     public void run() {
                         try {
                             MimeMessage _message = new MimeMessage(serverCfgMeta.createIfNeed());

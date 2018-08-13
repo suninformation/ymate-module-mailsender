@@ -46,6 +46,7 @@ public abstract class AbstractMailSendBuilder implements IMailSendBuilder {
 
     private List<PairObject<String, File>> attachments = new ArrayList<PairObject<String, File>>();
 
+    @Override
     public IMailSendBuilder to(String to) {
         String[] _tos = StringUtils.split(to, ";");
         if (_tos != null) {
@@ -54,11 +55,13 @@ public abstract class AbstractMailSendBuilder implements IMailSendBuilder {
         return this;
     }
 
+    @Override
     public IMailSendBuilder to(String[] to) {
         this.to.addAll(Arrays.asList(to));
         return this;
     }
 
+    @Override
     public IMailSendBuilder to(Collection<String> to) {
         this.to.addAll(to);
         return this;
@@ -66,6 +69,7 @@ public abstract class AbstractMailSendBuilder implements IMailSendBuilder {
 
     //
 
+    @Override
     public IMailSendBuilder cc(String cc) {
         String[] _ccs = StringUtils.split(cc, ";");
         if (_ccs != null) {
@@ -74,11 +78,13 @@ public abstract class AbstractMailSendBuilder implements IMailSendBuilder {
         return this;
     }
 
+    @Override
     public IMailSendBuilder cc(String[] cc) {
         this.cc.addAll(Arrays.asList(cc));
         return this;
     }
 
+    @Override
     public IMailSendBuilder cc(Collection<String> cc) {
         this.cc.addAll(cc);
         return this;
@@ -86,6 +92,7 @@ public abstract class AbstractMailSendBuilder implements IMailSendBuilder {
 
     //
 
+    @Override
     public IMailSendBuilder bcc(String bcc) {
         String[] _bccs = StringUtils.split(bcc, ";");
         if (_bccs != null) {
@@ -94,11 +101,13 @@ public abstract class AbstractMailSendBuilder implements IMailSendBuilder {
         return this;
     }
 
+    @Override
     public IMailSendBuilder bcc(String[] bcc) {
         this.bcc.addAll(Arrays.asList(bcc));
         return this;
     }
 
+    @Override
     public IMailSendBuilder bcc(Collection<String> bcc) {
         this.bcc.addAll(bcc);
         return this;
@@ -106,31 +115,37 @@ public abstract class AbstractMailSendBuilder implements IMailSendBuilder {
 
     //
 
+    @Override
     public IMailSendBuilder subject(String subject) {
         this.subject = subject;
         return this;
     }
 
+    @Override
     public IMailSendBuilder level(IMailSender.Level level) {
         this.level = level;
         return this;
     }
 
+    @Override
     public IMailSendBuilder mimeType(IMailSender.MimeType mimeType) {
         this.mimeType = mimeType;
         return this;
     }
 
+    @Override
     public IMailSendBuilder charset(String charset) {
         this.charset = charset;
         return this;
     }
 
+    @Override
     public IMailSendBuilder attachment(File file) {
         this.attachments.add(new PairObject<String, File>(null, file));
         return this;
     }
 
+    @Override
     public IMailSendBuilder attachment(String cid, File file) {
         this.attachments.add(new PairObject<String, File>(cid, file));
         return this;
