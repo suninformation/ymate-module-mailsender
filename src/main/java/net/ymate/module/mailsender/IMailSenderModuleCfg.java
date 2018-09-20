@@ -39,6 +39,11 @@ public interface IMailSenderModuleCfg {
     String getDefaultServerName();
 
     /**
+     * @return 模板文件路径, 默认值: ${root}/mail_templates/
+     */
+    String getTemplatePath();
+
+    /**
      * @return 返回邮件发送服务配置映射
      */
     Map<String, MailSendServerCfgMeta> getMailSendServerCfgs();

@@ -41,6 +41,11 @@ public interface IMailSender {
     boolean isInited();
 
     /**
+     * @return 返回邮件模板管理器实例
+     */
+    IMailTemplateManager getTemplateManager();
+
+    /**
      * @return 创建邮件发送构建工具实例
      */
     IMailSendBuilder create();

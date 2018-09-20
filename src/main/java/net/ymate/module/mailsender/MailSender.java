@@ -15,6 +15,7 @@
  */
 package net.ymate.module.mailsender;
 
+import net.ymate.module.mailsender.impl.DefaultMailTemplateManager;
 import net.ymate.module.mailsender.impl.DefaultModuleCfg;
 import net.ymate.platform.core.Version;
 import net.ymate.platform.core.YMP;
@@ -39,6 +40,8 @@ public class MailSender implements IModule, IMailSender {
     private YMP __owner;
 
     private IMailSenderModuleCfg __moduleCfg;
+
+    private IMailTemplateManager __templateManager;
 
     private boolean __inited;
 
@@ -69,6 +72,8 @@ public class MailSender implements IModule, IMailSender {
             //
             __moduleCfg.getMailSendProvider().init(this);
             //
+            __templateManager = new DefaultMailTemplateManager(this);
+            //
             __inited = true;
         }
     }
@@ -76,6 +81,11 @@ public class MailSender implements IModule, IMailSender {
     @Override
     public boolean isInited() {
         return __inited;
+    }
+
+    @Override
+    public IMailTemplateManager getTemplateManager() {
+        return __templateManager;
     }
 
     @Override

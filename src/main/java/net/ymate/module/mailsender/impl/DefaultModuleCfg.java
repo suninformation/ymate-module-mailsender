@@ -23,6 +23,7 @@ import net.ymate.platform.core.YMP;
 import net.ymate.platform.core.lang.BlurObject;
 import net.ymate.platform.core.support.IPasswordProcessor;
 import net.ymate.platform.core.util.ClassUtils;
+import net.ymate.platform.core.util.RuntimeUtils;
 import org.apache.commons.lang.StringUtils;
 
 import java.util.Collections;
@@ -41,6 +42,8 @@ public class DefaultModuleCfg implements IMailSenderModuleCfg {
 
     private String __defaultServerName;
 
+    private String __templatePath;
+
     private Map<String, MailSendServerCfgMeta> __mailSendServerCfgs;
 
     @SuppressWarnings("unchecked")
@@ -57,6 +60,8 @@ public class DefaultModuleCfg implements IMailSenderModuleCfg {
         }
         //
         __defaultServerName = StringUtils.defaultIfBlank(_moduleCfgs.get("default_server_name"), "default");
+        //
+        __templatePath = RuntimeUtils.replaceEnvVariable(StringUtils.defaultIfBlank(_moduleCfgs.get("template_path"), "${root}/mail_templates/"));
         //
         String _defaultDisplayName = StringUtils.trimToNull(_moduleCfgs.get("default_display_name"));
         String _defaultFromAddr = StringUtils.trimToNull(_moduleCfgs.get("default_from_addr"));
@@ -111,6 +116,11 @@ public class DefaultModuleCfg implements IMailSenderModuleCfg {
     @Override
     public String getDefaultServerName() {
         return __defaultServerName;
+    }
+
+    @Override
+    public String getTemplatePath() {
+        return __templatePath;
     }
 
     @Override
