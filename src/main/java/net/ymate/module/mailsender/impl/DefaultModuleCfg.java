@@ -92,6 +92,11 @@ public class DefaultModuleCfg implements IMailSenderModuleCfg {
                 _meta.setDebugEnabled(_debugEnabled);
                 _meta.setDisplayName(StringUtils.defaultIfBlank(_moduleCfgs.get(_prefix.concat(".display_name")), _defaultDisplayName));
                 _meta.setFromAddr(StringUtils.defaultIfBlank(_moduleCfgs.get(_prefix.concat(".from_addr")), _defaultFromAddr));
+                //
+                String smtpPort = _moduleCfgs.get(_prefix.concat(".smtp_port"));
+                if (StringUtils.isNotBlank(smtpPort) && StringUtils.isNumeric(smtpPort)) {
+                    _meta.setSmtpPort(BlurObject.bind(smtpPort).toIntValue());
+                }
                 if (_tlsEnabled) {
                     _meta.setSocketFactoryClassName(StringUtils.defaultIfBlank(_moduleCfgs.get(_prefix.concat(".socket_factory_class")), "javax.net.ssl.SSLSocketFactory"));
                     _meta.setSocketFactoryFallback(BlurObject.bind(_moduleCfgs.get(_prefix.concat(".socket_factory_fallback"))).toBooleanValue());
