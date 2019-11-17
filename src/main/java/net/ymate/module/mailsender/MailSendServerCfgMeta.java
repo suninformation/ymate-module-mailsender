@@ -51,11 +51,13 @@ public class MailSendServerCfgMeta {
 
     private boolean tlsEnabled;
 
+    private boolean sslEnabled;
+
     private boolean socketFactoryFallback;
 
     private String socketFactoryClassName;
 
-    public MailSendServerCfgMeta(String name, String smtpHost, boolean tlsEnabled) {
+    public MailSendServerCfgMeta(String name, String smtpHost, boolean tlsEnabled, boolean sslEnabled) {
         if (StringUtils.isBlank(name)) {
             throw new NullArgumentException("name");
         }
@@ -65,15 +67,11 @@ public class MailSendServerCfgMeta {
         this.name = name;
         this.smtpHost = smtpHost;
         this.tlsEnabled = tlsEnabled;
-        if (tlsEnabled) {
-            this.smtpPort = 465;
-        } else {
-            this.smtpPort = 25;
-        }
+        this.sslEnabled = sslEnabled;
     }
 
-    public MailSendServerCfgMeta(String name, String smtpHost, boolean tlsEnabled, String smtpUsername, String smtpPassword) {
-        this(name, smtpHost, tlsEnabled);
+    public MailSendServerCfgMeta(String name, String smtpHost, boolean tlsEnabled, boolean sslEnabled, String smtpUsername, String smtpPassword) {
+        this(name, smtpHost, tlsEnabled, sslEnabled);
         if (StringUtils.isBlank(smtpUsername)) {
             throw new NullArgumentException("smtpUsername");
         }
@@ -93,8 +91,17 @@ public class MailSendServerCfgMeta {
                     _props.put("mail.smtp.host", smtpHost);
                     _props.put("mail.smtp.auth", needAuth);
                     _props.put("mail.transport.protocol", "smtp");
+                    if (smtpPort <= 0) {
+                        if (sslEnabled) {
+                            this.smtpPort = 465;
+                        } else {
+                            this.smtpPort = 25;
+                        }
+                    }
                     if (tlsEnabled) {
                         _props.put("mail.smtp.starttls.enable", true);
+                        _props.put("mail.smtp.port", smtpPort);
+                    } else if (sslEnabled) {
                         _props.put("mail.smtp.socketFactory.port", smtpPort);
                         _props.put("mail.smtp.socketFactory.class", StringUtils.defaultIfBlank(socketFactoryClassName, "javax.net.ssl.SSLSocketFactory"));
                         _props.put("mail.smtp.socketFactory.fallback", socketFactoryFallback);
@@ -177,6 +184,14 @@ public class MailSendServerCfgMeta {
 
     public void setTlsEnabled(boolean tlsEnabled) {
         this.tlsEnabled = tlsEnabled;
+    }
+
+    public boolean isSslEnabled() {
+        return sslEnabled;
+    }
+
+    public void setSslEnabled(boolean sslEnabled) {
+        this.sslEnabled = sslEnabled;
     }
 
     public boolean isSocketFactoryFallback() {

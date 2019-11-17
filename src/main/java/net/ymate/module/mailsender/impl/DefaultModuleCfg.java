@@ -75,6 +75,7 @@ public class DefaultModuleCfg implements IMailSenderModuleCfg {
                 String _prefix = "server.".concat(_serverName);
                 boolean _needAuth = BlurObject.bind(_moduleCfgs.get(_prefix.concat(".need_auth"))).toBooleanValue();
                 boolean _tlsEnabled = BlurObject.bind(_moduleCfgs.get(_prefix.concat(".tls_enabled"))).toBooleanValue();
+                boolean _sslEnabled = BlurObject.bind(_moduleCfgs.get(_prefix.concat(".ssl_enabled"))).toBooleanValue();
                 MailSendServerCfgMeta _meta;
                 if (_needAuth) {
                     String _smtpPassword = _moduleCfgs.get(_prefix.concat(".smtp_password"));
@@ -85,9 +86,9 @@ public class DefaultModuleCfg implements IMailSenderModuleCfg {
                         }
                         _smtpPassword = _processor.decrypt(_smtpPassword);
                     }
-                    _meta = new MailSendServerCfgMeta(_serverName, _moduleCfgs.get(_prefix.concat(".smtp_host")), _tlsEnabled, _moduleCfgs.get(_prefix.concat(".smtp_username")), _smtpPassword);
+                    _meta = new MailSendServerCfgMeta(_serverName, _moduleCfgs.get(_prefix.concat(".smtp_host")), _tlsEnabled, _sslEnabled, _moduleCfgs.get(_prefix.concat(".smtp_username")), _smtpPassword);
                 } else {
-                    _meta = new MailSendServerCfgMeta(_serverName, _moduleCfgs.get(_prefix.concat(".smtp_host")), _tlsEnabled);
+                    _meta = new MailSendServerCfgMeta(_serverName, _moduleCfgs.get(_prefix.concat(".smtp_host")), _tlsEnabled, _sslEnabled);
                 }
                 _meta.setDebugEnabled(_debugEnabled);
                 _meta.setDisplayName(StringUtils.defaultIfBlank(_moduleCfgs.get(_prefix.concat(".display_name")), _defaultDisplayName));
@@ -97,7 +98,7 @@ public class DefaultModuleCfg implements IMailSenderModuleCfg {
                 if (StringUtils.isNotBlank(smtpPort) && StringUtils.isNumeric(smtpPort)) {
                     _meta.setSmtpPort(BlurObject.bind(smtpPort).toIntValue());
                 }
-                if (_tlsEnabled) {
+                if (_sslEnabled) {
                     _meta.setSocketFactoryClassName(StringUtils.defaultIfBlank(_moduleCfgs.get(_prefix.concat(".socket_factory_class")), "javax.net.ssl.SSLSocketFactory"));
                     _meta.setSocketFactoryFallback(BlurObject.bind(_moduleCfgs.get(_prefix.concat(".socket_factory_fallback"))).toBooleanValue());
                 }
