@@ -94,20 +94,20 @@ public class MailSendServerCfgMeta {
                     if (smtpPort <= 0) {
                         if (sslEnabled) {
                             this.smtpPort = 465;
+                        } else if (tlsEnabled) {
+                            this.smtpPort = 587;
                         } else {
                             this.smtpPort = 25;
                         }
                     }
                     if (tlsEnabled) {
                         _props.put("mail.smtp.starttls.enable", true);
-                        _props.put("mail.smtp.port", smtpPort);
                     } else if (sslEnabled) {
                         _props.put("mail.smtp.socketFactory.port", smtpPort);
                         _props.put("mail.smtp.socketFactory.class", StringUtils.defaultIfBlank(socketFactoryClassName, "javax.net.ssl.SSLSocketFactory"));
                         _props.put("mail.smtp.socketFactory.fallback", socketFactoryFallback);
-                    } else {
-                        _props.put("mail.smtp.port", smtpPort);
                     }
+                    _props.put("mail.smtp.port", smtpPort);
                     //
                     __mailSession = Session.getInstance(_props, new Authenticator() {
                         @Override
